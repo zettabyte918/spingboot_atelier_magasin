@@ -33,8 +33,16 @@ class DemoApplicationTests {
 	}
 
 	@Test
+	public void testFindAuthors() {
+		// Produit p = produitRepository.findById(2L).get();
+		List<Author> a = authorRepository.findAll();
+		System.out.println("*****************************");
+		System.out.println(a.toString());
+	}
+
+	@Test
 	public void testCreateArticle() {
-		Article a = new Article(1L, "test article", "test");
+		Article a = new Article("test article", "test");
 		Author au = new Author("hoss test", "test@test.com");
 		authorRepository.save(au);
 
@@ -43,41 +51,9 @@ class DemoApplicationTests {
 	}
 
 	@Test
-	public void testUpdateArticle() {
-		Article a = articleRepository.findById(1L).get();
-		a.setContent("test edited");
-		articleRepository.save(a);
-		System.out.println(a);
-	}
-
-	@Test
-	public void testDeleteArticle() {
-		articleRepository.deleteById(1L);
-	}
-
-	@Test
-	public void testFindAllArticle() {
-		List<Article> art = articleRepository.findAll();
-
-		for (Article a : art)
-			System.out.println(a.toString());
-
-	}
-
-	@Test
-	public void testFindArticleByTitle() {
-		List<Article> arts = articleRepository.findByTitleArticle("test article");
-		for (Article p : arts)
-			System.out.println(p);
-	}
-
-	@Test
-	public void testFindArticleByTitleContains() {
-		List<Article> arts = articleRepository.findByTitleArticleContains("t");
-
-		for (Article p : arts)
-			System.out.println(p);
-
+	public void testCreateAuthor() {
+		Author au = new Author("hoss test", "test@test.com");
+		authorRepository.save(au);
 	}
 
 }

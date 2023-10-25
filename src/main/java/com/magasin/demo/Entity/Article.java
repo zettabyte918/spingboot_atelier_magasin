@@ -15,8 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor // <--- THIS is it
 public class Article {
-
-    public Article(Long id, String string, String string2) {
+    public Article(String string, String string2) {
     }
 
     @Id
