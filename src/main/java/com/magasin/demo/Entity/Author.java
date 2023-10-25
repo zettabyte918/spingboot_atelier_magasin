@@ -1,5 +1,7 @@
 package com.magasin.demo.Entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,8 +22,11 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String firstname;
+    private String lastname;
     private String email;
+    private String tel;
+    private Date datenai;
 
     // Getters and setters
     // Constructors
