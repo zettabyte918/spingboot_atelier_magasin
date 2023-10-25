@@ -34,7 +34,7 @@ class DemoApplicationTests {
 
 	@Test
 	public void testCreateArticle() {
-		Article a = new Article("test article", "test");
+		Article a = new Article(1L, "test article", "test");
 		Author au = new Author("hoss test", "test@test.com");
 		authorRepository.save(au);
 
@@ -48,6 +48,20 @@ class DemoApplicationTests {
 		a.setContent("test edited");
 		articleRepository.save(a);
 		System.out.println(a);
+	}
+
+	@Test
+	public void testDeleteArticle() {
+		articleRepository.deleteById(1L);
+	}
+
+	@Test
+	public void testFindAllArticle() {
+		List<Article> art = articleRepository.findAll();
+
+		for (Article a : art)
+			System.out.println(a.toString());
+
 	}
 
 }
