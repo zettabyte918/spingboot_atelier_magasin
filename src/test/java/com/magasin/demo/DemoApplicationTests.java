@@ -33,14 +33,21 @@ class DemoApplicationTests {
 	}
 
 	@Test
-	public void testCreateProduit() {
+	public void testCreateArticle() {
 		Article a = new Article("test article", "test");
 		Author au = new Author("hoss test", "test@test.com");
 		authorRepository.save(au);
 
 		a.setAuthor(au);
 		articleRepository.save(a);
+	}
 
+	@Test
+	public void testUpdateArticle() {
+		Article a = articleRepository.findById(1L).get();
+		a.setContent("test edited");
+		articleRepository.save(a);
+		System.out.println(a);
 	}
 
 }
