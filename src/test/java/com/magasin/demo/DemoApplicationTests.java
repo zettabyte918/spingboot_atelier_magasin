@@ -1,5 +1,8 @@
 package com.magasin.demo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -43,7 +46,15 @@ class DemoApplicationTests {
 	@Test
 	public void testCreateArticle() {
 		Article a = new Article("test article", "test");
-		Author au = new Author("hoss test", "test@test.com");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = null;
+		try {
+			date = sdf.parse("2023-10-10");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Author au = new Author("hoss test", "last", "test@test.com", "22222", date);
 		authorRepository.save(au);
 
 		a.setAuthor(au);
@@ -52,7 +63,15 @@ class DemoApplicationTests {
 
 	@Test
 	public void testCreateAuthor() {
-		Author au = new Author("hoss test", "test@test.com");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = null;
+		try {
+			date = sdf.parse("2023-10-10");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Author au = new Author("hoss test", "last", "test@test.com", "22222", date);
 		authorRepository.save(au);
 	}
 

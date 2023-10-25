@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Author {
-    public Author(String string, String string2) {
+    public Author(String string, String string2, String string3, String string4, Date date) {
     }
 
     @Id
