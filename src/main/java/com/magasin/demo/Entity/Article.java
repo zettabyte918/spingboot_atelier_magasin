@@ -15,6 +15,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor // <--- THIS is it
 public class Article {
+
+    public Article(String string, String string2) {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

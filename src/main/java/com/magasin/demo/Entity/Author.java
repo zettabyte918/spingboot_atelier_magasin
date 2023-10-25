@@ -13,6 +13,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Author {
+    public Author(String string, String string2) {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
