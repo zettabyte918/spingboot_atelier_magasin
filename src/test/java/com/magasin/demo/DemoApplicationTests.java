@@ -64,4 +64,20 @@ class DemoApplicationTests {
 
 	}
 
+	@Test
+	public void testFindArticleByTitle() {
+		List<Article> arts = articleRepository.findByTitleArticle("test article");
+		for (Article p : arts)
+			System.out.println(p);
+	}
+
+	@Test
+	public void testFindArticleByTitleContains() {
+		List<Article> arts = articleRepository.findByTitleArticleContains("t");
+
+		for (Article p : arts)
+			System.out.println(p);
+
+	}
+
 }
