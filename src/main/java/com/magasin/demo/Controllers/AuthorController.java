@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.magasin.demo.Entity.Article;
 import com.magasin.demo.Entity.Author;
+import com.magasin.demo.Repository.ArticleRepository;
 import com.magasin.demo.Repository.AuthorRepository;
+import com.magasin.demo.Services.ArticleService;
 import com.magasin.demo.Services.AuthorService;
 
 @RestController
@@ -19,11 +21,24 @@ public class AuthorController {
     private AuthorService authorService;
 
     @Autowired
+    private ArticleService articleService;
+
+    @Autowired
     private AuthorRepository authorRepo;
+
+    @Autowired
+    private ArticleRepository articleRepo;
 
     @GetMapping("")
     public List<Author> getAllAuthors() {
         return authorRepo.findAll();
+    }
+
+    @GetMapping("{id}/articles")
+    public ResponseEntity<List<Article>> getAllAuthorsArticles(@PathVariable Long id) {
+        Author au = authorService.getAuthorById(id);
+        List<Article> arts = articleService.getArticlesByAuthor(au);
+        return ResponseEntity.status(HttpStatus.CREATED).body(arts);
     }
 
     @PostMapping
