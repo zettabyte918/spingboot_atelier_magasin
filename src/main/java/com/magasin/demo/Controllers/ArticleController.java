@@ -43,16 +43,10 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdArticle);
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateArticle(@RequestBody Article article, @RequestParam Long authorId) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody Article article) {
         // Retrieve the author based on the provided authorId
-        Author author = authorService.getAuthorById(authorId);
-        if (author == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        article.setAuthor(author);
         articleRepo.save(article);
-        return ResponseEntity.status(HttpStatus.CREATED).body("updated");
+        return ResponseEntity.status(HttpStatus.CREATED).body(article);
     }
 }
