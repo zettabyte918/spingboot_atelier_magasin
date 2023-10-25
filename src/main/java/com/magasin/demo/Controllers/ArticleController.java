@@ -43,7 +43,7 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdArticle);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody Article article) {
         // Retrieve the author based on the provided authorId
         articleRepo.save(article);
