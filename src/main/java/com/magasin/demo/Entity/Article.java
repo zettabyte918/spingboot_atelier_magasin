@@ -3,6 +3,7 @@ package com.magasin.demo.Entity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,7 +31,6 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Author author;
 
     // Getters and setters
