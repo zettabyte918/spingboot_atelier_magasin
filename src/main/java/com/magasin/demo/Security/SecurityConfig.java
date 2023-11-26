@@ -43,12 +43,13 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/articles/**").hasAnyAuthority("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                 // .requestMatchers("/api/getbyid/**").hasAnyAuthority("ADMIN", "USER")
                 // .requestMatchers(HttpMethod.POST, "/api/addprod/**").hasAuthority("ADMIN")
                 // .requestMatchers(HttpMethod.PUT, "/api/updateprod/**").hasAuthority("ADMIN")
                 // .requestMatchers(HttpMethod.DELETE, "/api/delprod/**").hasAuthority("ADMIN")
                 // .requestMatchers("/cat/**").hasAnyAuthority("ADMIN", "USER")
-                .anyRequest().authenticated().and()
+                .anyRequest().permitAll().and()
                 .addFilterBefore(new JWTAuthorizationFilter(), BasicAuthenticationFilter.class);
 
         return http.build();

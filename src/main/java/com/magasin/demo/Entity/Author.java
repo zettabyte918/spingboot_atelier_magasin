@@ -33,6 +33,9 @@ public class Author {
     private String tel;
     private Date datenai;
 
+    @Column
+    private String avatarUrl;
+
     // Getters and setters
     // Constructors
 }
