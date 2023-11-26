@@ -45,7 +45,7 @@ public class AuthorController {
             // Process the uploaded file and update the author's avatarUrl
             String avatarUrl = authorService.saveAuthorAvatar(author, file);
 
-            return ResponseEntity.ok("Avatar uploaded successfully. Avatar URL: " + avatarUrl);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Avatar uploaded");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading avatar");
         }
