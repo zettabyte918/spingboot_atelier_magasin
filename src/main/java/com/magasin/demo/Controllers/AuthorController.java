@@ -11,9 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -21,13 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.magasin.demo.Entity.Article;
 import com.magasin.demo.Entity.Author;
-import com.magasin.demo.Repository.ArticleRepository;
 import com.magasin.demo.Repository.AuthorRepository;
 import com.magasin.demo.Services.ArticleService;
 import com.magasin.demo.Services.AuthorService;
@@ -43,9 +39,6 @@ public class AuthorController {
 
     @Autowired
     private AuthorRepository authorRepo;
-
-    @Autowired
-    private ArticleRepository articleRepo;
 
     @PostMapping("/{id}/upload-avatar")
     public ResponseEntity<Map<String, Object>> handleAvatarUpload(
@@ -74,6 +67,7 @@ public class AuthorController {
                 // Wait for the saveImageFuture to complete before responding
                 String avatarUrl = saveImageFuture.join();
 
+                // hack to wait image saving algorithm for now :/
                 Thread.sleep(5000);
 
                 if (avatarUrl != null) {
