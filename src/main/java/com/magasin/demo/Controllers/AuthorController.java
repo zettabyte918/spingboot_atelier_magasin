@@ -65,7 +65,7 @@ public class AuthorController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(createResponse(true, "Avatar containt a face"));
             }
 
-            return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(createResponse(false, "Avatar does not contain a face"));
 
         } catch (IOException e) {
