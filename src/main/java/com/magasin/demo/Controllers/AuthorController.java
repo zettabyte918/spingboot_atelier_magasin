@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -60,17 +61,38 @@ public class AuthorController {
             // Check if the uploaded image contains a face using the face detection API
             Boolean hasFace = handleDjangoResponse(file, "http://localhost:8000/api/detect-face/");
             if (hasFace) {
-                // Process the uploaded file and update the author's avatarUrl
-                String avatarUrl = authorService.saveAuthorAvatar(author, file);
-                return ResponseEntity.status(HttpStatus.CREATED).body(createResponse(true, "Avatar containt a face"));
+                // Use CompletableFuture to asynchronously save the image
+                CompletableFuture<String> saveImageFuture = CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return authorService.saveAuthorAvatar(author, file);
+                    } catch (IOException e) {
+                        // Handle the exception if needed
+                        return null;
+                    }
+                });
+
+                // Wait for the saveImageFuture to complete before responding
+                String avatarUrl = saveImageFuture.join();
+
+                Thread.sleep(5000);
+
+                if (avatarUrl != null) {
+                    return ResponseEntity.status(HttpStatus.CREATED)
+                            .body(createResponse(true, "Avatar added successfully"));
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(createResponse(false, "Error uploading avatar"));
+                }
             }
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(createResponse(false, "Avatar does not contain a face"));
+                    .body(createResponse(false, "Failed detecting a face on " + author.getFirstname()
+                            + ", Try adding an image containing a face"));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
+            // Handle other exceptions if needed
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createResponse(true, "Error uploading avatar"));
+                    .body(createResponse(false, "Error handling request"));
         }
     }
 
