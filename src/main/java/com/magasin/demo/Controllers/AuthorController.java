@@ -2,6 +2,8 @@ package com.magasin.demo.Controllers;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,26 +47,38 @@ public class AuthorController {
     private ArticleRepository articleRepo;
 
     @PostMapping("/{id}/upload-avatar")
-    public ResponseEntity<String> handleAvatarUpload(
+    public ResponseEntity<Map<String, Object>> handleAvatarUpload(
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file) {
         try {
             // Validate if the author exists
             Author author = authorService.getAuthorById(id);
             if (author == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(createResponse(false, "Author not found"));
             }
 
             // Check if the uploaded image contains a face using the face detection API
-            handleDjangoResponse(file, "http://localhost:8000/api/detect-face/");
+            Boolean hasFace = handleDjangoResponse(file, "http://localhost:8000/api/detect-face/");
+            if (hasFace) {
+                // Process the uploaded file and update the author's avatarUrl
+                String avatarUrl = authorService.saveAuthorAvatar(author, file);
+                return ResponseEntity.status(HttpStatus.CREATED).body(createResponse(true, "Avatar containt a face"));
+            }
 
-            // Process the uploaded file and update the author's avatarUrl
-            String avatarUrl = authorService.saveAuthorAvatar(author, file);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(createResponse(false, "Avatar does not contain a face"));
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Avatar uploaded");
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading avatar");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createResponse(true, "Error uploading avatar"));
         }
+    }
+
+    private Map<String, Object> createResponse(boolean success, String message) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", message);
+        return response;
     }
 
     @GetMapping("")
@@ -81,31 +95,30 @@ public class AuthorController {
 
     @PostMapping
     public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
-        author.setAvatarUrl("/images/default.png");
+        // Set default avatar URL if the list is empty
+        if (author.getAvatarUrls() == null || author.getAvatarUrls().isEmpty()) {
+            List<String> defaultAvatarUrls = new ArrayList<>();
+            defaultAvatarUrls.add("/images/default.png");
+            author.setAvatarUrls(defaultAvatarUrls);
+        }
+
         Author createdAuthor = authorService.createAuthor(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAuthor);
     }
 
-    public void handleDjangoResponse(MultipartFile file, String apiUrl) {
+    public Boolean handleDjangoResponse(MultipartFile file, String apiUrl) {
         try {
             // Use the uploadImage method to send the file to Django
             ResponseEntity<Map<String, Boolean>> responseEntity = uploadImage(file, apiUrl);
 
             // Extract the "face" attribute from the response
             Map<String, Boolean> responseBody = responseEntity.getBody();
-            Boolean hasFace = responseBody != null ? responseBody.get("face") : null;
+            return responseBody != null ? responseBody.get("face") : null;
 
-            // Handle the response based on whether a face is present
-            if (hasFace != null && hasFace) {
-                System.out.println("Face is present in the uploaded image.");
-                // Add your logic here
-            } else {
-                System.out.println("No face detected in the uploaded image.");
-                // Add your logic here
-            }
         } catch (Exception e) {
             // Handle exceptions
             e.printStackTrace();
+            return false;
         }
     }
 

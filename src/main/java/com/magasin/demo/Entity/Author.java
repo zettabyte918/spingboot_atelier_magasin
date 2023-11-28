@@ -1,12 +1,17 @@
 package com.magasin.demo.Entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,8 +38,10 @@ public class Author {
     private String tel;
     private Date datenai;
 
-    @Column
-    private String avatarUrl;
+    @ElementCollection
+    @CollectionTable(name = "author_avatars", joinColumns = @JoinColumn(name = "author_id"))
+    @Column(name = "avatar_url")
+    private List<String> avatarUrls = new ArrayList<>();
 
     // Getters and setters
     // Constructors

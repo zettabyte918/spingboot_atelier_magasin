@@ -28,7 +28,7 @@ public class AuthorService {
 
         // Update the author's avatarUrl
         String avatarUrl = "/images/" + fileName;
-        author.setAvatarUrl(avatarUrl);
+        author.getAvatarUrls().add(avatarUrl);
         authorRepository.save(author);
 
         return avatarUrl;
