@@ -32,6 +32,13 @@ public class AuthorService {
 
         // Update the author's avatarUrl
         String avatarUrl = "/images/" + fileName;
+
+        // delete default image if found
+        if (author.getAvatarUrls().contains("/images/default.png")) {
+            author.getAvatarUrls().remove("/images/default.png");
+            authorRepository.save(author);
+        }
+
         author.getAvatarUrls().add(avatarUrl);
         authorRepository.save(author);
 

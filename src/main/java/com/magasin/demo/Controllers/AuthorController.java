@@ -40,6 +40,34 @@ public class AuthorController {
     @Autowired
     private AuthorRepository authorRepo;
 
+    @DeleteMapping("/{id}/delete-avatar")
+    public ResponseEntity<Map<String, Object>> deleteAvatar(
+            @PathVariable Long id,
+            @RequestParam String avatarUrl) {
+        try {
+            Author author = authorService.getAuthorById(id);
+
+            if (author == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(createResponse(false, "Author not found"));
+            }
+
+            // Check if the avatarUrl exists in the list of avatarUrls
+            if (author.getAvatarUrls().contains(avatarUrl)) {
+                author.getAvatarUrls().remove(avatarUrl);
+                authorRepo.save(author);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(createResponse(true, "Avatar deleted successfully"));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(createResponse(false, "Avatar URL not found for the given author"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createResponse(false, "Error deleting avatar"));
+        }
+    }
+
     @PostMapping("/{id}/upload-avatar")
     public ResponseEntity<Map<String, Object>> handleAvatarUpload(
             @PathVariable Long id,
@@ -53,6 +81,7 @@ public class AuthorController {
 
             // Check if the uploaded image contains a face using the face detection API
             Boolean hasFace = handleDjangoResponse(file, "http://localhost:8000/api/detect-face/");
+            Thread.sleep(2000);
             if (hasFace) {
                 // Use CompletableFuture to asynchronously save the image
                 CompletableFuture<String> saveImageFuture = CompletableFuture.supplyAsync(() -> {
@@ -68,7 +97,7 @@ public class AuthorController {
                 String avatarUrl = saveImageFuture.join();
 
                 // hack to wait image saving algorithm for now :/
-                Thread.sleep(5000);
+                Thread.sleep(3000);
 
                 if (avatarUrl != null) {
                     return ResponseEntity.status(HttpStatus.CREATED)
