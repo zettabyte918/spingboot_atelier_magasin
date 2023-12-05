@@ -43,13 +43,18 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/articles/**").hasAnyAuthority("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/articles/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/articles/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/articles/**").hasAuthority("ADMIN")
+
+                .requestMatchers(HttpMethod.GET, "/authors/**").hasAnyAuthority("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/authors/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/authors/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/authors/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/authors/**").hasAnyAuthority("ADMIN", "USER")
+
                 .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
-                // .requestMatchers("/api/getbyid/**").hasAnyAuthority("ADMIN", "USER")
-                // .requestMatchers(HttpMethod.POST, "/api/addprod/**").hasAuthority("ADMIN")
-                // .requestMatchers(HttpMethod.PUT, "/api/updateprod/**").hasAuthority("ADMIN")
-                // .requestMatchers(HttpMethod.DELETE, "/api/delprod/**").hasAuthority("ADMIN")
-                // .requestMatchers("/cat/**").hasAnyAuthority("ADMIN", "USER")
-                .anyRequest().permitAll().and()
+                .anyRequest().authenticated().and()
                 .addFilterBefore(new JWTAuthorizationFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
