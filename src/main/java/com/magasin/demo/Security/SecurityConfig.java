@@ -48,10 +48,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/articles/**").hasAuthority("ADMIN")
 
                 .requestMatchers(HttpMethod.GET, "/authors/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/authors/**").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/authors/**").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/authors/**").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/authors/**").hasAnyAuthority("ADMIN", "USER")
+                .requestMatchers(HttpMethod.PUT, "/authors/**").hasAuthority("ADMIN")
 
                 .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                 .anyRequest().authenticated().and()
